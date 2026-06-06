@@ -1,7 +1,7 @@
 # Projeto Final, Laboratório de Sistemas Digitais
 
 <p align="center">
-Projeto desenvolvido para a disciplina de Laboratório de Sistemas Digitais da UFMG, contemplando todas as etapas do fluxo de desenvolvimento de um sistema digital em RTL utilizando VHDL e implementação em FPGA DE10-Lite.
+Projeto desenvolvido para a disciplina de **Laboratório de Sistemas Digitais da UFMG**, contemplando todas as etapas do fluxo de desenvolvimento de um sistema digital em RTL utilizando VHDL e implementação em *FPGA DE10-Lite*.
 </p>
 
 ## Sumário
