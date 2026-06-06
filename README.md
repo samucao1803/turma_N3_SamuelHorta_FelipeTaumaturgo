@@ -91,8 +91,8 @@ Nesta etapa é realizada a síntese do projeto para a FPGA DE10-Lite, incluindo 
 
 ### Integrantes
 
-* Nome do Aluno 1
-* Nome do Aluno 2
+* Felipe Lucca Taumaturgo de Oliveira
+* Samuel Lima Horta
 
 ### Tema do Projeto
 
@@ -103,4 +103,3 @@ Sistema de Estacionamento Inteligente
 * FPGA DE10-Lite
 * VHDL
 * Quartus Prime
-* ModelSim
