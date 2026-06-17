@@ -17,7 +17,7 @@ Etapa 3/
 │   ├── calculador_vagas.vhd (feito/revisar entradas e saidas)
 │   ├── decodificador_hex.vhd (feito/revisar entradas e saidas)
 │   └── fsm_estacionamento.vhd (feito/revisar entradas e saidas)
-    - interface de saida (falta)
+    - interface de saida / se precisar (falta)
     - MUX 2x1 (falta)
 
 ├── tb/
@@ -31,7 +31,7 @@ Etapa 3/
 │   ├── tb_calculador_vagas.vhd
 │   ├── tb_decodificador_hex.vhd
 │   └── tb_fsm_estacionamento.vhd
-        - interface de saida (falta)
+        - interface de saida / se precisae (falta)
         - MUX 2x1 (falta)
 └── sim/
     └── relatorio_simulacoes.md
@@ -49,3 +49,100 @@ ghdl -r --std=08 tb_reg_veiculos --wave=sim/tb_reg_veiculos.ghw
 ```
 
 Repita os comandos `-e` e `-r` para os demais testbenches.
+
+## Arquitetura atualizada
+
+-- sinais de controle 
+
+inc_veiculos -> Incrementa o contador de veículos. 
+
+dec_veiculos -> Decrementa o contador de veículos. 
+
+load_historico -> Atualiza o registrador de histórico. 
+
+atualiza_saidas_hex -> Atualiza os displays. 
+
+reset_regs -> Reinicializa os registradores do sistema. 
+
+-- sinais de status
+
+vaga_disponivel -> Indica a existência de vagas livres no estacionamento. 
+
+estacionamento_lotado -> Indica que a capacidade máxima foi atingida. 
+
+estacionamento_vazio -> Indica ausência de veículos no estacionamento. 
+
+-- componentes
+
+FSM  
+Controlar a sequência de execução do sistema e gerar sinais de controle. 
+Entradas: CLOCK_50, KEY0, KEY1, SW[3:0], SW9(reset) 
+Saidas: inc_veiculos, dec_veiculos, load_historico, reset_regs 
+
+
+Registrador de Veículos &
+Armazenar a quantidade atual de veículos. &
+Entradas:clk, reset, inc_veiculos, dec_veiculos, atualiza_veiculos[3:0]  &
+Saidas: veiculos_atual[3:0], veiculos[3:0] 
+
+
+Registrador de Capacidade &
+Armazenar a capacidade máxima configurada. &
+Entradas:SW[3:0], clk, reset &
+Saidas: capacidade_atual[3:0] 
+
+
+Registrador de Vagas Livres &
+Armazenar a quantidade de vagas disponíveis. &
+Entradas:vagas_livres_entrada[3:0], clk, reset &
+Saidas: vagas_livres[3:0] 
+
+
+Registrador de Histórico &
+Registrar as últimas movimentações realizadas. &
+Entradas: load_historico[7:0], clk, reset &
+- 
+
+
+Somador &
+Realizar a operação Veiculos + 1. &
+Entradas: veiculos[3:0] &
+Saidas: veiculos+1 - [3:0] 
+
+
+Subtrator &
+Realizar a operação Veiculos - 1. &
+Entradas: veiculos[3:0] &
+Saidas: veiculos-1 -[3:0] 
+
+
+MUX &
+Escolher entre a operação de soma e subtração . &
+Entradas: veiculos_subt [3:0], veiculos_adc [3:0], inc_veiculos, dec_veiculos,  &
+Saidas: atualiza_veiculos[3:0] 
+
+
+Comparador &
+Comparar a quantidade de veículos com a capacidade máxima. &
+Entradas: veiculos_atual[3:0], capacidade_atual[3:0] &
+Saidas: vaga_disponivel, estacionamento_lotado, estacionamento_vazio, saida_led0, saida_led1, saida_led2 
+
+
+Calculador de Vagas Livres &
+Calcular vagas livres disponíveis. &
+Entradas: capacidade_atual[3:0], veiculos_atual[3:0] &
+Saidas: vagas_livres_entrada[3:0] 
+
+
+Decodificador HEX &
+Converter valores binários para displays de sete segmentos. &
+Entradas: veiculos_atual[3:0] , vagas_livres[3:0], atualiza_saida_hex  &
+Saidas: segmentos_hex0 [6:0], segmentos_hex1 [6:0],
+
+
+
+
+
+
+
+
