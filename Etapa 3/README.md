@@ -7,16 +7,19 @@ Esta etapa contém os **10 componentes individuais** do sistema Smart Parking Ma
 ```text
 Etapa 3/
 ├── src/
-│   ├── reg_veiculos.vhd
-│   ├── reg_capacidade.vhd
-│   ├── reg_vagas_livres.vhd
-│   ├── reg_historico.vhd
-│   ├── somador.vhd
-│   ├── subtrator.vhd
-│   ├── comparador.vhd
-│   ├── calculador_vagas.vhd
-│   ├── decodificador_hex.vhd
-│   └── fsm_estacionamento.vhd
+│   ├── reg_veiculos.vhd (feito/revisar entradas e saidas )
+│   ├── reg_capacidade.vhd (feito/revisar entradas e saidas)
+│   ├── reg_vagas_livres.vhd (feito/revisar entradas e saidas)
+│   ├── reg_historico.vhd (feito/revisar entradas e saidas)
+│   ├── somador.vhd (feito/revisar entradas e saidas)
+│   ├── subtrator.vhd (feito/revisar entradas e saidas)
+│   ├── comparador.vhd (feito/revisar entradas e saidas)
+│   ├── calculador_vagas.vhd (feito/revisar entradas e saidas)
+│   ├── decodificador_hex.vhd (feito/revisar entradas e saidas)
+│   └── fsm_estacionamento.vhd (feito/revisar entradas e saidas)
+    - interface de saida (falta)
+    - MUX 2x1 (falta)
+
 ├── tb/
 │   ├── tb_reg_veiculos.vhd
 │   ├── tb_reg_capacidade.vhd
@@ -28,6 +31,8 @@ Etapa 3/
 │   ├── tb_calculador_vagas.vhd
 │   ├── tb_decodificador_hex.vhd
 │   └── tb_fsm_estacionamento.vhd
+        - interface de saida (falta)
+        - MUX 2x1 (falta)
 └── sim/
     └── relatorio_simulacoes.md
 ```
