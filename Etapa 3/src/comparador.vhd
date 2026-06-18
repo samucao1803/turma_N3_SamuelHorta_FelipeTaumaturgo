@@ -21,7 +21,7 @@ begin
     estacionamento_lotado <= '1' when unsigned(veiculos_atual) >= unsigned(capacidade_atual) else '0';
     estacionamento_vazio  <= '1' when unsigned(veiculos_atual) = 0 else '0';
 
-    saida_led0 <= vaga_disponivel;
-    saida_led1 <= estacionamento_lotado;
-    saida_led2 <= estacionamento_vazio;
+    saida_led0 <= '1' when unsigned(veiculos_atual) < unsigned(capacidade_atual) else '0';
+    saida_led1 <= '1' when (unsigned(capacidade_atual) - unsigned(veiculos_atual)) <= 2 and unsigned(veiculos_atual) < unsigned(capacidade_atual) else '0';
+    saida_led2 <= '1' when unsigned(veiculos_atual) >= unsigned(capacidade_atual) else '0';
 end architecture;

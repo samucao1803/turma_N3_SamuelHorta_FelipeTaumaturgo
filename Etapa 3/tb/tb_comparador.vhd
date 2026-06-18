@@ -30,22 +30,47 @@ begin
     begin
         capacidade_atual <= "1010";
 
+        
         veiculos_atual <= "0000";
         wait for 1 ns;
-        assert vaga_disponivel = '1' and estacionamento_lotado = '0' and estacionamento_vazio = '1' severity error;
 
+        assert vaga_disponivel = '1' severity error;
+        assert estacionamento_lotado = '0' severity error;
+        assert estacionamento_vazio = '1' severity error;
+        assert saida_led0 = '1' severity error;
+        assert saida_led1 = '0' severity error;
+        assert saida_led2 = '0' severity error;
+
+        
         veiculos_atual <= "0101";
         wait for 1 ns;
-        assert vaga_disponivel = '1' and estacionamento_lotado = '0' and estacionamento_vazio = '0' severity error;
 
-        veiculos_atual <= "1010";
-        wait for 1 ns;
-        assert vaga_disponivel = '0' and estacionamento_lotado = '1' severity error;
+        assert vaga_disponivel = '1' severity error;
+        assert estacionamento_lotado = '0' severity error;
+        assert estacionamento_vazio = '0' severity error;
+        assert saida_led0 = '1' severity error;
+        assert saida_led1 = '0' severity error;
+        assert saida_led2 = '0' severity error;
 
-        veiculos_atual <= "1111";
+        
+        veiculos_atual <= "1000";
         wait for 1 ns;
-        assert estacionamento_lotado = '1' severity error;
-        assert saida_led0 = vaga_disponivel and saida_led1 = estacionamento_lotado and saida_led2 = estacionamento_vazio severity error;
+
+        assert vaga_disponivel = '1' severity error;
+        assert estacionamento_lotado = '0' severity error;
+        assert saida_led0 = '1' severity error;
+        assert saida_led1 = '1' severity error;
+        assert saida_led2 = '0' severity error;
+
+        
+        veiculos_atual <= "1001";
+        wait for 1 ns;
+
+        assert vaga_disponivel = '1' severity error;
+        assert estacionamento_lotado = '0' severity error;
+        assert saida_led0 = '1' severity error;
+        assert saida_led1 = '1' severity error;
+        assert saida_led2 = '0' severity error;
 
         wait;
     end process;
