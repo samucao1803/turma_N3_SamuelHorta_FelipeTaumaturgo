@@ -16,6 +16,7 @@ Etapa 3/
 │   ├── comparador.vhd (feito/revisar entradas e saidas)
 │   ├── calculador_vagas.vhd (feito/revisar entradas e saidas)
 │   ├── decodificador_hex.vhd (feito/revisar entradas e saidas)
+│   ├── mux.vhd (feito/revisar entradas e saidas)
 │   └── fsm_estacionamento.vhd (feito/revisar entradas e saidas)
     - interface de saida / se precisar (falta)
     - MUX 2x1 (falta)
@@ -30,6 +31,7 @@ Etapa 3/
 │   ├── tb_comparador.vhd
 │   ├── tb_calculador_vagas.vhd
 │   ├── tb_decodificador_hex.vhd
+│   └── tb_mux.vhd
 │   └── tb_fsm_estacionamento.vhd
         - interface de saida / se precisae (falta)
         - MUX 2x1 (falta)
