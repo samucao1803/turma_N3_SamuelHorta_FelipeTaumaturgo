@@ -1,5 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use std.env.all;
 
 entity tb_reg_veiculos is
 end entity;
@@ -62,6 +63,8 @@ begin
         assert veiculos_atual = "1111" report "Falha: controles simultaneos" severity error;
         assert veiculos = veiculos_atual report "Falha: saidas divergentes" severity error;
 
+        report "tb_reg_veiculos concluido com sucesso" severity note;
+        stop;
         wait;
     end process;
 end architecture;

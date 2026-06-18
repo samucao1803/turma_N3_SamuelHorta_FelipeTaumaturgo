@@ -11,11 +11,8 @@ entity calculador_vagas is
 end entity;
 
 architecture rtl of calculador_vagas is
-    signal capacidade_u : unsigned(3 downto 0);
-    signal veiculos_u   : unsigned(3 downto 0);
 begin
-    capacidade_u <= unsigned(capacidade_atual);
-    veiculos_u   <= unsigned(veiculos_atual);
-
-    vagas_livres <= std_logic_vector(capacidade_u - veiculos_u) when capacidade_u >= veiculos_u else (others => '0');
+    vagas_livres <= std_logic_vector(unsigned(capacidade_atual) - unsigned(veiculos_atual))
+        when unsigned(capacidade_atual) >= unsigned(veiculos_atual)
+        else (others => '0');
 end architecture;

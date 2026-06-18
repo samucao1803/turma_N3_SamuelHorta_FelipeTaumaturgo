@@ -1,5 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use std.env.all;
 
 entity tb_reg_capacidade is
 end entity;
@@ -37,6 +38,8 @@ begin
         wait for 2 ns;
         assert capacidade_atual = "0000" report "Falha: reset" severity error;
 
+        report "tb_reg_capacidade concluido com sucesso" severity note;
+        stop;
         wait;
     end process;
 end architecture;

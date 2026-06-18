@@ -3,32 +3,42 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity decodificador_hex is
     port (
-        valor_binario : in  std_logic_vector(3 downto 0);
-        segmentos_hex : out std_logic_vector(6 downto 0)
+        veiculos_atual      : in  std_logic_vector(3 downto 0);
+        vagas_livres        : in  std_logic_vector(3 downto 0);
+        atualiza_saida_hex  : in  std_logic;
+        segmentos_hex0      : out std_logic_vector(6 downto 0);
+        segmentos_hex1      : out std_logic_vector(6 downto 0)
     );
 end entity;
 
 architecture rtl of decodificador_hex is
-begin
-    process (valor_binario)
+    function decodifica(valor : std_logic_vector(3 downto 0)) return std_logic_vector is
     begin
-        case valor_binario is
-            when "0000" => segmentos_hex <= "1000000"; -- 0
-            when "0001" => segmentos_hex <= "1111001"; -- 1
-            when "0010" => segmentos_hex <= "0100100"; -- 2
-            when "0011" => segmentos_hex <= "0110000"; -- 3
-            when "0100" => segmentos_hex <= "0011001"; -- 4
-            when "0101" => segmentos_hex <= "0010010"; -- 5
-            when "0110" => segmentos_hex <= "0000010"; -- 6
-            when "0111" => segmentos_hex <= "1111000"; -- 7
-            when "1000" => segmentos_hex <= "0000000"; -- 8
-            when "1001" => segmentos_hex <= "0010000"; -- 9
-            when "1010" => segmentos_hex <= "0001000"; -- A
-            when "1011" => segmentos_hex <= "0000011"; -- b
-            when "1100" => segmentos_hex <= "1000110"; -- C
-            when "1101" => segmentos_hex <= "0100001"; -- d
-            when "1110" => segmentos_hex <= "0000110"; -- E
-            when others => segmentos_hex <= "0001110"; -- F
+        case valor is
+            when "0000" => return "1000000"; -- 0
+            when "0001" => return "1111001"; -- 1
+            when "0010" => return "0100100"; -- 2
+            when "0011" => return "0110000"; -- 3
+            when "0100" => return "0011001"; -- 4
+            when "0101" => return "0010010"; -- 5
+            when "0110" => return "0000010"; -- 6
+            when "0111" => return "1111000"; -- 7
+            when "1000" => return "0000000"; -- 8
+            when "1001" => return "0010000"; -- 9
+            when "1010" => return "0001000"; -- A
+            when "1011" => return "0000011"; -- b
+            when "1100" => return "1000110"; -- C
+            when "1101" => return "0100001"; -- d
+            when "1110" => return "0000110"; -- E
+            when others => return "0001110"; -- F
         end case;
+    end function;
+begin
+    process (atualiza_saida_hex)
+    begin
+        if rising_edge(atualiza_saida_hex) then
+            segmentos_hex0 <= decodifica(veiculos_atual);
+            segmentos_hex1 <= decodifica(vagas_livres);
+        end if;
     end process;
 end architecture;

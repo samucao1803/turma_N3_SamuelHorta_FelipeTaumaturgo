@@ -1,5 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use std.env.all;
 
 entity tb_fsm_estacionamento is
 end entity;
@@ -12,36 +13,16 @@ architecture tb of tb_fsm_estacionamento is
     signal vaga_disponivel       : std_logic := '1';
     signal estacionamento_lotado : std_logic := '0';
     signal estacionamento_vazio  : std_logic := '0';
-    signal atualiza_saidas_hex   : std_logic := '0';
     signal inc_veiculos          : std_logic;
     signal dec_veiculos          : std_logic;
     signal load_historico        : std_logic;
-    signal atualiza_saidas       : std_logic;
+    signal atualiza_saidas_hex   : std_logic;
     signal reset_regs            : std_logic;
 
-    procedure expect_pulse(signal s: in std_logic; constant timeout: time; constant msg: string) is
-        variable elapsed : time := 0 ns;
+    procedure avanca_ciclo is
     begin
-        while elapsed < timeout loop
-            if s = '1' then
-                return;
-            end if;
-            wait for 1 ns;
-            elapsed := elapsed + 1 ns;
-        end loop;
-        assert false report msg severity error;
-    end procedure;
-
-    procedure expect_no_pulse(signal s: in std_logic; constant timeout: time; constant msg: string) is
-        variable elapsed : time := 0 ns;
-    begin
-        while elapsed < timeout loop
-            if s = '1' then
-                assert false report msg severity error;
-            end if;
-            wait for 1 ns;
-            elapsed := elapsed + 1 ns;
-        end loop;
+        wait until rising_edge(clk);
+        wait for 1 ns;
     end procedure;
 begin
     uut: entity work.fsm_estacionamento
@@ -53,11 +34,10 @@ begin
             vaga_disponivel => vaga_disponivel,
             estacionamento_lotado => estacionamento_lotado,
             estacionamento_vazio => estacionamento_vazio,
-            atualiza_saidas_hex => atualiza_saidas_hex,
             inc_veiculos => inc_veiculos,
             dec_veiculos => dec_veiculos,
             load_historico => load_historico,
-            atualiza_saidas => atualiza_saidas,
+            atualiza_saidas_hex => atualiza_saidas_hex,
             reset_regs => reset_regs
         );
 
@@ -66,49 +46,79 @@ begin
     stim: process
     begin
         wait for 2 ns;
-        assert reset_regs = '1' report "Falha: reset_regs nao ativo em reset" severity error;
-
-        wait for 10 ns;
+        assert reset_regs = '1' report "Falha: reset_regs inativo durante reset" severity error;
         reset <= '0';
+        avanca_ciclo; -- RESET_ST -> ESPERA
+        assert reset_regs = '0' report "Falha: reset_regs permaneceu ativo" severity error;
 
+        -- Entrada com vaga disponivel.
         req_entrada <= '1';
-        expect_pulse(inc_veiculos, 80 ns, "Falha: entrada nao gerou incremento");
-        expect_pulse(load_historico, 80 ns, "Falha: entrada nao atualizou historico");
-        expect_pulse(atualiza_saidas, 80 ns, "Falha: entrada nao atualizou saidas");
+        avanca_ciclo; -- ESPERA -> ENTRADA
         req_entrada <= '0';
+        avanca_ciclo; -- ENTRADA -> VERIFICA_CAPACIDADE
+        avanca_ciclo; -- VERIFICA_CAPACIDADE -> REGISTRA_ENTRADA
+        assert inc_veiculos = '1' and load_historico = '1'
+            report "Falha: entrada valida nao foi registrada" severity error;
+        assert dec_veiculos = '0' severity error;
+        avanca_ciclo; -- REGISTRA_ENTRADA -> ATUALIZA_SAIDAS_ST
+        assert atualiza_saidas_hex = '1' report "Falha: entrada nao atualizou saidas" severity error;
+        avanca_ciclo; -- ATUALIZA_SAIDAS_ST -> ESPERA
+        assert atualiza_saidas_hex = '0' severity error;
 
-        atualiza_saidas_hex <= '1';
-        wait for 10 ns;
-        atualiza_saidas_hex <= '0';
-
+        -- Tentativa de entrada com estacionamento lotado.
         vaga_disponivel <= '0';
         estacionamento_lotado <= '1';
         req_entrada <= '1';
-        expect_no_pulse(inc_veiculos, 50 ns, "Falha: incrementou em estado lotado");
-        expect_pulse(atualiza_saidas, 80 ns, "Falha: lotado nao atualizou saidas");
+        avanca_ciclo;
         req_entrada <= '0';
+        avanca_ciclo;
+        avanca_ciclo; -- VERIFICA_CAPACIDADE -> LOTADO
+        assert inc_veiculos = '0' and atualiza_saidas_hex = '0'
+            report "Falha: tratamento da entrada em lotacao" severity error;
+        avanca_ciclo; -- LOTADO -> ATUALIZA_SAIDAS_ST
+        assert atualiza_saidas_hex = '1' severity error;
+        avanca_ciclo; -- retorno a ESPERA
 
-        atualiza_saidas_hex <= '1';
-        wait for 10 ns;
-        atualiza_saidas_hex <= '0';
-
+        -- Saida com veiculos presentes.
         vaga_disponivel <= '1';
         estacionamento_lotado <= '0';
         estacionamento_vazio <= '0';
         req_saida <= '1';
-        expect_pulse(dec_veiculos, 80 ns, "Falha: saida nao gerou decremento");
-        expect_pulse(load_historico, 80 ns, "Falha: saida nao atualizou historico");
+        avanca_ciclo; -- ESPERA -> SAIDA
         req_saida <= '0';
+        avanca_ciclo; -- SAIDA -> REGISTRA_SAIDA
+        assert dec_veiculos = '1' and load_historico = '1'
+            report "Falha: saida valida nao foi registrada" severity error;
+        assert inc_veiculos = '0' severity error;
+        avanca_ciclo; -- REGISTRA_SAIDA -> ATUALIZA_SAIDAS_ST
+        assert atualiza_saidas_hex = '1' report "Falha: saida nao atualizou displays" severity error;
+        avanca_ciclo; -- retorno a ESPERA
 
-        atualiza_saidas_hex <= '1';
-        wait for 10 ns;
-        atualiza_saidas_hex <= '0';
-
+        -- Tentativa de saida com estacionamento vazio.
         estacionamento_vazio <= '1';
         req_saida <= '1';
-        expect_no_pulse(dec_veiculos, 60 ns, "Falha: decrementou com estacionamento vazio");
+        avanca_ciclo; -- ESPERA -> SAIDA
         req_saida <= '0';
+        avanca_ciclo; -- SAIDA -> ATUALIZA_SAIDAS_ST
+        assert dec_veiculos = '0' and load_historico = '0'
+            report "Falha: estacionamento vazio gerou decremento" severity error;
+        assert atualiza_saidas_hex = '1' severity error;
+        avanca_ciclo; -- retorno a ESPERA
 
+        -- Prioridade documentada da entrada quando ambas requisicoes chegam juntas.
+        estacionamento_vazio <= '0';
+        req_entrada <= '1';
+        req_saida <= '1';
+        avanca_ciclo;
+        req_entrada <= '0';
+        req_saida <= '0';
+        avanca_ciclo;
+        avanca_ciclo;
+        assert inc_veiculos = '1' and dec_veiculos = '0'
+            report "Falha: prioridade de entrada para requisicoes simultaneas" severity error;
+
+        report "tb_fsm_estacionamento concluido com sucesso" severity note;
+        stop;
         wait;
     end process;
 end architecture;

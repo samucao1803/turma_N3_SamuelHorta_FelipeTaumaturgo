@@ -1,5 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use std.env.all;
 
 entity tb_reg_historico is
 end entity;
@@ -46,6 +47,8 @@ begin
         wait for 2 ns;
         assert historico_atual = x"00" report "Falha: reset" severity error;
 
+        report "tb_reg_historico concluido com sucesso" severity note;
+        stop;
         wait;
     end process;
 end architecture;

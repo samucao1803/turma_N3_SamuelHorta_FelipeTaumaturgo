@@ -1,5 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use std.env.all;
 
 entity tb_reg_vagas_livres is
 end entity;
@@ -37,6 +38,8 @@ begin
         wait for 2 ns;
         assert vagas_livres = "0000" report "Falha: reset" severity error;
 
+        report "tb_reg_vagas_livres concluido com sucesso" severity note;
+        stop;
         wait;
     end process;
 end architecture;

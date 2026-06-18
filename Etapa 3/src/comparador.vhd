@@ -16,15 +16,10 @@ entity comparador is
 end entity;
 
 architecture rtl of comparador is
-    signal veiculos_u   : unsigned(3 downto 0);
-    signal capacidade_u : unsigned(3 downto 0);
 begin
-    veiculos_u   <= unsigned(veiculos_atual);
-    capacidade_u <= unsigned(capacidade_atual);
-
-    vaga_disponivel       <= '1' when veiculos_u < capacidade_u else '0';
-    estacionamento_lotado <= '1' when veiculos_u >= capacidade_u else '0';
-    estacionamento_vazio  <= '1' when veiculos_u = 0 else '0';
+    vaga_disponivel       <= '1' when unsigned(veiculos_atual) < unsigned(capacidade_atual) else '0';
+    estacionamento_lotado <= '1' when unsigned(veiculos_atual) >= unsigned(capacidade_atual) else '0';
+    estacionamento_vazio  <= '1' when unsigned(veiculos_atual) = 0 else '0';
 
     saida_led0 <= vaga_disponivel;
     saida_led1 <= estacionamento_lotado;

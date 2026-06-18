@@ -10,11 +10,10 @@ entity fsm_estacionamento is
         vaga_disponivel       : in  std_logic;
         estacionamento_lotado : in  std_logic;
         estacionamento_vazio  : in  std_logic;
-        atualiza_saidas_hex   : in  std_logic;
         inc_veiculos          : out std_logic;
         dec_veiculos          : out std_logic;
         load_historico        : out std_logic;
-        atualiza_saidas       : out std_logic;
+        atualiza_saidas_hex   : out std_logic;
         reset_regs            : out std_logic
     );
 end entity;
@@ -43,7 +42,7 @@ begin
         end if;
     end process;
 
-    process (estado_atual, req_entrada, req_saida, vaga_disponivel, estacionamento_lotado, estacionamento_vazio, atualiza_saidas_hex)
+    process (estado_atual, req_entrada, req_saida, vaga_disponivel, estacionamento_lotado, estacionamento_vazio)
     begin
         proximo_estado <= estado_atual;
 
@@ -85,9 +84,7 @@ begin
                 proximo_estado <= ATUALIZA_SAIDAS_ST;
 
             when ATUALIZA_SAIDAS_ST =>
-                if atualiza_saidas_hex = '1' then
-                    proximo_estado <= ESPERA;
-                end if;
+                proximo_estado <= ESPERA;
         end case;
     end process;
 
@@ -96,7 +93,7 @@ begin
         inc_veiculos    <= '0';
         dec_veiculos    <= '0';
         load_historico  <= '0';
-        atualiza_saidas <= '0';
+        atualiza_saidas_hex <= '0';
         reset_regs      <= '0';
 
         case estado_atual is
@@ -111,8 +108,8 @@ begin
                 dec_veiculos   <= '1';
                 load_historico <= '1';
 
-            when LOTADO | ATUALIZA_SAIDAS_ST =>
-                atualiza_saidas <= '1';
+            when ATUALIZA_SAIDAS_ST =>
+                atualiza_saidas_hex <= '1';
 
             when others =>
                 null;
