@@ -78,19 +78,19 @@ estacionamento_vazio -> Indica ausência de veículos no estacionamento.
 
 FSM  
 Controlar a sequência de execução do sistema e gerar sinais de controle. 
-Entradas: CLOCK_50, KEY0, KEY1, SW[3:0], SW9(reset) 
+Entradas: CLOCK_50, KEY0, KEY1, SW9(reset) 
 Saidas: inc_veiculos, dec_veiculos, load_historico, reset_regs 
 
 
 Registrador de Veículos &
-Armazenar a quantidade atual de veículos. &
+Armazenar a quantidade atual de veículos(Começar com 0, se receber um sinal de ). &
 Entradas:clk, reset, inc_veiculos, dec_veiculos, atualiza_veiculos[3:0]  &
 Saidas: veiculos_atual[3:0], veiculos[3:0] 
 
 
 Registrador de Capacidade &
-Armazenar a capacidade máxima configurada. &
-Entradas:SW[3:0], clk, reset &
+Calcula e armazena a capacidade máxima configurada (MAX 9 VAGAS). &
+Entradas:SW0, SW1, SW2, SW3, clk, reset &
 Saidas: capacidade_atual[3:0] 
 
 

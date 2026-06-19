@@ -1,6 +1,5 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use std.env.all;
 
 entity tb_reg_historico is
 end entity;
@@ -21,7 +20,18 @@ begin
             historico_atual => historico_atual
         );
 
-    clk <= not clk after 5 ns;
+    clock_process : process
+    begin
+        for i in 1 to 20 loop
+            clk <= '0';
+            wait for 5 ns;
+
+            clk <= '1';
+            wait for 5 ns;
+        end loop;
+
+        wait;
+    end process;
 
     stim: process
     begin
@@ -48,7 +58,6 @@ begin
         assert historico_atual = x"00" report "Falha: reset" severity error;
 
         report "tb_reg_historico concluido com sucesso" severity note;
-        stop;
         wait;
     end process;
 end architecture;

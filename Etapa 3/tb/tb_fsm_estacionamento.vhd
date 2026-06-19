@@ -55,7 +55,7 @@ begin
         avanca_ciclo; -- RESET_ST -> ESPERA
         assert reset_regs = '0' report "Falha: reset_regs permaneceu ativo" severity error;
 
-        -- Entrada com vaga disponivel.
+        
         req_entrada <= '1';
         avanca_ciclo; -- ESPERA -> ENTRADA
         req_entrada <= '0';
@@ -69,7 +69,7 @@ begin
         avanca_ciclo; -- ATUALIZA_SAIDAS_ST -> ESPERA
         assert atualiza_saidas_hex = '0' severity error;
 
-        -- Tentativa de entrada com estacionamento lotado.
+        
         vaga_disponivel <= '0';
         estacionamento_lotado <= '1';
         req_entrada <= '1';
@@ -83,7 +83,7 @@ begin
         assert atualiza_saidas_hex = '1' severity error;
         avanca_ciclo; -- retorno a ESPERA
 
-        -- Saida com veiculos presentes.
+       
         vaga_disponivel <= '1';
         estacionamento_lotado <= '0';
         estacionamento_vazio <= '0';
@@ -98,7 +98,7 @@ begin
         assert atualiza_saidas_hex = '1' report "Falha: saida nao atualizou displays" severity error;
         avanca_ciclo; -- retorno a ESPERA
 
-        -- Tentativa de saida com estacionamento vazio.
+        
         estacionamento_vazio <= '1';
         req_saida <= '1';
         avanca_ciclo; -- ESPERA -> SAIDA
@@ -109,7 +109,7 @@ begin
         assert atualiza_saidas_hex = '1' severity error;
         avanca_ciclo; -- retorno a ESPERA
 
-        -- Prioridade documentada da entrada quando ambas requisicoes chegam juntas.
+        
         estacionamento_vazio <= '0';
         req_entrada <= '1';
         req_saida <= '1';
