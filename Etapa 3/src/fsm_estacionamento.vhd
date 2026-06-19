@@ -14,6 +14,8 @@ entity fsm_estacionamento is
         dec_veiculos          : out std_logic;
         load_historico        : out std_logic;
         atualiza_saidas_hex   : out std_logic;
+        LEDR8                 : out std_logic;
+        LEDR9                 : out std_logic;
         reset_regs            : out std_logic
     );
 end entity;
@@ -95,10 +97,15 @@ begin
         load_historico  <= '0';
         atualiza_saidas_hex <= '0';
         reset_regs      <= '0';
+        LEDR8           <= '0';
+        LEDR9           <= '0';
 
         case estado_atual is
             when RESET_ST =>
                 reset_regs <= '1';
+
+            when ENTRADA =>
+                LEDR8 <= '1';
 
             when REGISTRA_ENTRADA =>
                 inc_veiculos   <= '1';
@@ -107,6 +114,9 @@ begin
             when REGISTRA_SAIDA =>
                 dec_veiculos   <= '1';
                 load_historico <= '1';
+
+            when SAIDA =>
+                LEDR9 <= '1';
 
             when ATUALIZA_SAIDAS_ST =>
                 atualiza_saidas_hex <= '1';

@@ -18,6 +18,8 @@ architecture tb of tb_fsm_estacionamento is
     signal load_historico        : std_logic;
     signal atualiza_saidas_hex   : std_logic;
     signal reset_regs            : std_logic;
+    signal LEDR8                 : std_logic;
+    signal LEDR9                 : std_logic;
 
     procedure avanca_ciclo is
     begin
@@ -38,6 +40,8 @@ begin
             dec_veiculos => dec_veiculos,
             load_historico => load_historico,
             atualiza_saidas_hex => atualiza_saidas_hex,
+            LEDR8 => LEDR8,
+            LEDR9 => LEDR9,
             reset_regs => reset_regs
         );
 
