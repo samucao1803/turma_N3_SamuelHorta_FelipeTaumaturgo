@@ -52,21 +52,21 @@ begin
         wait for 2 ns;
         assert reset_regs = '1' report "Falha: reset_regs inativo durante reset" severity error;
         reset <= '0';
-        avanca_ciclo; -- RESET_ST -> ESPERA
+        avanca_ciclo; 
         assert reset_regs = '0' report "Falha: reset_regs permaneceu ativo" severity error;
 
         
         req_entrada <= '1';
-        avanca_ciclo; -- ESPERA -> ENTRADA
+        avanca_ciclo; 
         req_entrada <= '0';
-        avanca_ciclo; -- ENTRADA -> VERIFICA_CAPACIDADE
-        avanca_ciclo; -- VERIFICA_CAPACIDADE -> REGISTRA_ENTRADA
+        avanca_ciclo; 
+        avanca_ciclo; 
         assert inc_veiculos = '1' and load_historico = '1'
             report "Falha: entrada valida nao foi registrada" severity error;
         assert dec_veiculos = '0' severity error;
-        avanca_ciclo; -- REGISTRA_ENTRADA -> ATUALIZA_SAIDAS_ST
+        avanca_ciclo; 
         assert atualiza_saidas_hex = '1' report "Falha: entrada nao atualizou saidas" severity error;
-        avanca_ciclo; -- ATUALIZA_SAIDAS_ST -> ESPERA
+        avanca_ciclo; 
         assert atualiza_saidas_hex = '0' severity error;
 
         
@@ -76,38 +76,38 @@ begin
         avanca_ciclo;
         req_entrada <= '0';
         avanca_ciclo;
-        avanca_ciclo; -- VERIFICA_CAPACIDADE -> LOTADO
+        avanca_ciclo; 
         assert inc_veiculos = '0' and atualiza_saidas_hex = '0'
             report "Falha: tratamento da entrada em lotacao" severity error;
-        avanca_ciclo; -- LOTADO -> ATUALIZA_SAIDAS_ST
+        avanca_ciclo; 
         assert atualiza_saidas_hex = '1' severity error;
-        avanca_ciclo; -- retorno a ESPERA
+        avanca_ciclo; 
 
        
         vaga_disponivel <= '1';
         estacionamento_lotado <= '0';
         estacionamento_vazio <= '0';
         req_saida <= '1';
-        avanca_ciclo; -- ESPERA -> SAIDA
+        avanca_ciclo;
         req_saida <= '0';
-        avanca_ciclo; -- SAIDA -> REGISTRA_SAIDA
+        avanca_ciclo; 
         assert dec_veiculos = '1' and load_historico = '1'
             report "Falha: saida valida nao foi registrada" severity error;
         assert inc_veiculos = '0' severity error;
-        avanca_ciclo; -- REGISTRA_SAIDA -> ATUALIZA_SAIDAS_ST
+        avanca_ciclo; 
         assert atualiza_saidas_hex = '1' report "Falha: saida nao atualizou displays" severity error;
-        avanca_ciclo; -- retorno a ESPERA
+        avanca_ciclo; 
 
         
         estacionamento_vazio <= '1';
         req_saida <= '1';
-        avanca_ciclo; -- ESPERA -> SAIDA
+        avanca_ciclo; 
         req_saida <= '0';
-        avanca_ciclo; -- SAIDA -> ATUALIZA_SAIDAS_ST
+        avanca_ciclo; 
         assert dec_veiculos = '0' and load_historico = '0'
             report "Falha: estacionamento vazio gerou decremento" severity error;
         assert atualiza_saidas_hex = '1' severity error;
-        avanca_ciclo; -- retorno a ESPERA
+        avanca_ciclo; 
 
         
         estacionamento_vazio <= '0';
